@@ -33,6 +33,8 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
+
+      - name: Install zeus
         run: pnpm install @zeppos/zeus-cli -g
 
       - name: Build Test
