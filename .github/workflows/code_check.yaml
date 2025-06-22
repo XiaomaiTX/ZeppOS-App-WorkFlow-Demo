@@ -33,12 +33,9 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-
-      - name: Install zeus
-        run: pnpm install @zeppos/zeus-cli -g
-
+        
       - name: Build Test
-        run: zeus build
+        run: npm install @zeppos/zeus-cli -g && zeus build
 
       - name: Run ESLint
         run: npx eslint . --ext .js,.ts,.vue
