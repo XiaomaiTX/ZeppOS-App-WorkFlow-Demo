@@ -1,0 +1,55 @@
+name: Code Check & Auto Fix
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  lint-and-fix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Cache node_modules
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-node-${{ hashFiles('package-lock.json') }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8
+
+      - name: Install dependencies
+        run: pnpm install
+        run: pnpm install @zeppos/zeus-cli -g
+
+      - name: Build Test
+        run: zeus build
+
+      - name: Run ESLint
+        run: npx eslint . --ext .js,.ts,.vue
+
+      - name: Run Prettier check
+        run: npx prettier --check . --write
+
+      - name: Commit auto-fixes
+        if: success()
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "style: auto-fix by ESLint/Prettier"
+          branch: main
+          author_name: GitHub Actions
+          author_email: actions@github.com
+          file_pattern: ':(exclude).github/workflows/*'
