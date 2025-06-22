@@ -3,6 +3,7 @@ import { log as Logger } from "@zos/utils";
 import { TEXT_STYLE } from "zosLoader:./index.page.[pf].layout.js";
 
 const logger = Logger.getLogger("helloworld");
+// eslint-disable-next-line no-undef
 Page({
   onInit() {
     logger.debug("page onInit invoked");
